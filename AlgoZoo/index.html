@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Algorithm Zoo - Aligned Tree Visualization</title>
+    <style>
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+        .node {
+            font: 11px sans-serif;
+            font-weight: bold;
+        }
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 1.5px;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+    <script>
+        // Adjusted dimensions for a tree layout
+        var width = 2200,
+            height = 3000;
+
+        // --- KEY CHANGE: Switched from d3.layout.cluster to d3.layout.tree ---
+        // The tree layout enforces strict hierarchical levels.
+        var tree = d3.layout.tree()
+            .size([height, width - 500]);
+
+        var diagonal = d3.svg.diagonal()
+            .projection(function(d) { return [d.y, d.x]; });
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            // Adjusted transform for better centering and to show root node label
+            .attr("transform", "translate(200,0)");
+
+        var root = getData(),
+            nodes = tree.nodes(root), // Use the tree layout here
+            links = tree.links(nodes); // And here
+
+        var link = svg.selectAll(".link")
+            .data(links)
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", diagonal);
+
+        var node = svg.selectAll(".node")
+            .data(nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+
+        node.append("circle")
+            .attr("r", 4.5);
+
+        node.append("text")
+            .attr("dx", function(d) { return d.children ? -12 : 12; })
+            .attr("dy", 4)
+            .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+            .text(function(d) { return d.name; });
+
+        function getData() {
+            return {
+                "name": "Quantum Algorithms",
+                "children": [{
+                        "name": "⚛️ Algebraic & Number Theoretic",
+                        "children": [
+                            {"name": "1. Factoring", "children": [{"name": "Cryptanalysis", "children": [{"name": "Breaking RSA Encryption"}]}]},
+                            {"name": "2. Discrete-log", "children": [{"name": "Cryptanalysis", "children": [{"name": "Breaking Diffie-Hellman & ECC"}]}]},
+                            {"name": "3. Pell's Equation", "children": [{"name": "Cryptanalysis", "children": [{"name": "Breaking Buchmann-Williams Crypto"}]}]},
+                            {"name": "4. Principal Ideal", "children": [{"name": "Cryptanalysis & Number Theory"}]},
+                            {"name": "5. Unit Group", "children": [{"name": "Number Theory Research"}]},
+                            {"name": "6. Class Group", "children": [{"name": "Number Theory Research"}, {"name": "Cryptanalysis (Isogenies)"}]},
+                            {"name": "7. Gauss Sums", "children": [{"name": "Cryptanalysis"}, {"name": "Physics (Partition Functions)"}]},
+                            {"name": "8. Primality Proving", "children": [{"name": "Cryptographic Certification"}]},
+                            {"name": "9. Solving Exp. Congruences", "children": [{"name": "Cryptanalysis (Index Calculus)"}]},
+                            {"name": "10. Matrix Elements...", "children": [{"name": "Fundamental Physics"}, {"name": "Representation Theory"}]},
+                            {"name": "11. Verifying Matrix Products", "children": [{"name": "Computational Linear Algebra"}]},
+                            {"name": "12. Subset-sum", "children": [{"name": "Cryptanalysis (Knapsack Crypto)"}]},
+                            {"name": "13. Decoding", "children": [{"name": "Classical Error Correction"}]}
+                        ]
+                    },
+                    {
+                        "name": "🔮 Oracular Algorithms",
+                        "children": [
+                            {"name": "15. Searching (Grover)", "children": [{"name": "Unstructured Search"}, {"name": "NP-Hard Problem Heuristics"}]},
+                            {"name": "16. Abelian HSP", "children": [{"name": "Unifying Algorithmic Framework"}]},
+                            {"name": "17. Non-Abelian HSP", "children": [{"name": "Open Research Problem", "children": [{"name": "Graph Isomorphism"}, {"name": "Lattice Cryptanalysis"}]}]},
+                            {"name": "18. Bernstein-Vazirani", "children": [{"name": "Fundamental Quantum Primitive"}]},
+                            {"name": "19. Deutsch-Jozsa", "children": [{"name": "Pedagogical Tool"}, {"name": "First Oracle Separation"}]},
+                            {"name": "20. Formula Evaluation", "children": [{"name": "Generalization of Grover's Search"}]},
+                            {"name": "21. Hidden Shift", "children": [{"name": "Cryptanalysis"}, {"name": "Bridge to Non-Abelian HSP"}]},
+                            {"name": "22. Polynomial interpolation", "children": [{"name": "Coding Theory"}, {"name": "Cryptography"}]},
+                            {"name": "23. Pattern matching", "children": [{"name": "Bioinformatics"}, {"name": "Data Mining"}]},
+                            {"name": "24. Ordered Search", "children": [{"name": "Theoretical Query Complexity"}]},
+                            {"name": "25. Graph Properties (Matrix Model)", "children": [{"name": "Dense Network Analysis"}]},
+                            {"name": "26. Graph Properties (List Model)", "children": [{"name": "Sparse Network Analysis"}]},
+                            {"name": "27. Welded Tree", "children": [{"name": "Oracle Separation (BQP vs BPP)"}]},
+                            {"name": "28. Collision Finding & ED", "children": [{"name": "Cryptanalysis (Hash Functions)"}, {"name": "Algorithmic Subroutine"}]},
+                            {"name": "29. Graph Collision", "children": [{"name": "Structured Search Primitive"}]},
+                            {"name": "30. Matrix Commutativity", "children": [{"name": "Quantum Mechanics"}, {"name": "Linear Algebra"}]},
+                            {"name": "31. Group Commutativity", "children": [{"name": "Computational Group Theory"}]},
+                            {"name": "32. Hidden Nonlinear Structures", "children": [{"name": "Pattern Recognition (Future)"}, {"name": "Data Analysis (Future)"}]},
+                            {"name": "33. Center of Radial Function", "children": [{"name": "High-Dimensional Data Analysis"}]},
+                            {"name": "34. Group Order & Membership", "children": [{"name": "Abstract Algebra Toolkit"}]},
+                            {"name": "35. Group Isomorphism", "children": [{"name": "Abstract Algebra Classification"}]},
+                            {"name": "36. Statistical Difference", "children": [{"name": "Property Testing"}, {"name": "Statistics & ML"}]},
+                            {"name": "37. Finite Rings and Ideals", "children": [{"name": "Abstract Algebra Toolkit"}]},
+                            {"name": "38. Counterfeit Coins", "children": [{"name": "Group Testing Problems"}]},
+                            {"name": "39. Matrix Rank", "children": [{"name": "Data Science (PCA)"}, {"name": "Linear Algebra"}]},
+                            {"name": "40. Matrix Multiplication (Semirings)", "children": [{"name": "Core Graph Algorithms", "children": [{"name": "All-Pairs Shortest Path"}]}]},
+                            {"name": "41. Subset finding", "children": [{"name": "Constraint Satisfaction Problems"}]},
+                            {"name": "42. Search with Wildcards", "children": [{"name": "Combinatorial Group Testing"}]},
+                            {"name": "43. Network flows", "children": [{"name": "Optimization", "children": [{"name": "Logistics"}, {"name": "Scheduling"}]}]},
+                            {"name": "44. Electrical Resistance", "children": [{"name": "Graph Network Analysis"}]},
+                            {"name": "45. Junta Testing & Group Testing", "children": [{"name": "Machine Learning", "children": [{"name": "Feature Selection"}]}]}
+                        ]
+                    },
+                    {
+                        "name": "🔬 Approximation & Simulation",
+                        "children": [
+                            {"name": "46. Simulating Hamiltonian Dynamics", "children": [{"name": "Quantum Chemistry"}, {"name": "Materials Science"}, {"name": "Fundamental Physics"}]},
+                            {"name": "47. Preparing Eigenstates & Thermal States", "children": [{"name": "Quantum Chemistry"}, {"name": "Optimization"}]},
+                            {"name": "48. Knot Invariants", "children": [{"name": "BQP-Completeness"}, {"name": "Topological Quantum Computation"}]},
+                            {"name": "49. Three-manifold Invariants", "children": [{"name": "BQP-Completeness"}, {"name": "Topology Research"}]},
+                            {"name": "50. Partition Functions", "children": [{"name": "Statistical Physics"}, {"name": "Machine Learning Models"}]},
+                            {"name": "51. Zeta Functions", "children": [{"name": "Cryptography (Curve Generation)"}, {"name": "Number Theory Research"}]},
+                            {"name": "52. Weight Enumerators", "children": [{"name": "BQP-Completeness"}, {"name": "Coding Theory"}]},
+                            {"name": "53. Simulated Annealing", "children": [{"name": "General-Purpose Optimization"}]},
+                            {"name": "54. String Rewriting", "children": [{"name": "BQP-Completeness (Computational Models)"}]},
+                            {"name": "55. Matrix Powers", "children": [{"name": "BQP-Completeness (Dynamic Systems)"}]},
+                            {"name": "56. Probabilistic Sampling", "children": [{"name": "Quantum Advantage Demonstration"}]}
+                        ]
+                    },
+                    {
+                        "name": "🧠 Optimization, Numerics, & ML",
+                        "children": [
+                            {"name": "57. CSPs Speedups", "children": [{"name": "NP-Hard Problem Heuristics", "children": [{"name": "Logistics"}, {"name": "AI Planning"}]}]},
+                            {"name": "58. Adiabatic Algorithms", "children": [{"name": "Optimization"}, {"name": "Hardware Model (Quantum Annealing)"}]},
+                            {"name": "59. QAOA", "children": [{"name": "Combinatorial Optimization (NISQ)"}]},
+                            {"name": "60. Gradient Estimation", "children": [{"name": "Engine for Quantum ML"}]},
+                            {"name": "61. Semidefinite Programming", "children": [{"name": "General Optimization"}, {"name": "Control Theory"}]},
+                            {"name": "62. Convex Optimization", "children": [{"name": "General Optimization"}, {"name": "Finance (Portfolio Opt.)"}]},
+                            {"name": "63. Optimization by DQI", "children": [{"name": "Hybrid Optimization Paradigm"}]},
+                            {"name": "64. Linear Systems (HHL)", "children": [{"name": "Core QML Primitive"}, {"name": "Scientific Simulation"}]},
+                            {"name": "65. Estimating Determinants", "children": [{"name": "Numerical Linear Algebra"}]},
+                            {"name": "66. Machine Learning", "children": [{"name": "Primary Application Area"}]},
+                            {"name": "67. Tensor PCA", "children": [{"name": "High-Dimensional Data Analysis"}]},
+                            {"name": "68. Solving Linear DEs", "children": [{"name": "Scientific & Engineering Simulation"}]},
+                            {"name": "69. Solving Nonlinear DEs", "children": [{"name": "Fluid Dynamics"}, {"name": "Finance (Black-Scholes)"}]},
+                            {"name": "70. Quantum Dynamic Programming", "children": [{"name": "NP-Hard Exact Solvers", "children": [{"name": "Traveling Salesman Problem"}]}]},
+                            {"name": "71. Computing Principal Eigenvector", "children": [{"name": "PCA"}, {"name": "Ranking Algorithms (PageRank)"}]},
+                            {"name": "72. Approximating Nash Equilibria", "children": [{"name": "Game Theory"}, {"name": "Economics"}]},
+                            {"name": "73. Lattice Problems by Filtering", "children": [{"name": "Post-Quantum Cryptanalysis"}]},
+                            {"name": "74. Double-bracket algorithms", "children": [{"name": "New Optimization Paradigm"}]}
+                        ]
+                    }
+                ]
+            };
+        }
+    </script>
+</body>
+</html>
